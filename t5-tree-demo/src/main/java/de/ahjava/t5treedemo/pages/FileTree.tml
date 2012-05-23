@@ -1,31 +1,28 @@
-<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+<t:Layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:tr="tapestry-library:t5tree"
       xmlns:tri="tapestry-library:t5tree/internal"
       >
- <body>
-  <div class="container">
-    <header>
-      <h1>A tree representation of the local file system</h1>
-   </header>
+  <header>
+    <h1>A tree representation of the local file system</h1>
+  </header>
   
-    <p />
+  <p />
 
-    This is a recursively defined tree that is transferred to the browser incrementally and lazily. Initially, the first two levels of the tree are open. 
+  This is a recursively defined tree that is transferred to the browser incrementally and lazily. Initially, the first two levels of the tree are open. 
     
-    <p />
+  <p />
     
-    Opening nodes *lazily* loads missing parts of the tree via AJAX, chunking data by always transfering two levels at a time. This can be monitored e.g. using
+  Opening nodes *lazily* loads missing parts of the tree via AJAX, chunking data by always transfering two levels at a time. This can be monitored e.g. using
      the FireBug plugin for Firefox.
      
-    <p />
+  <p />
     
-    All of this behavior is specified in the TreeModel provided by the page class.
+  All of this behavior is specified in the TreeModel provided by the page class.
     
-    <p />
+  <p />
 
-    <div class="well">  
-      <tr:tree t:id="tree" model="fileModel" />
-    </div>
+  <div class="well">  
+    <tr:tree t:id="tree" model="fileModel" />
   </div>
- </body>
-</html>
+</t:Layout>
+  

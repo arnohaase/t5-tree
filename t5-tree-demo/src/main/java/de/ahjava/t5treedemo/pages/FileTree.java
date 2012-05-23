@@ -9,7 +9,7 @@ import org.apache.tapestry5.annotations.Import;
 import de.ahjava.t5tree.tree.TreeModel;
 
 
-@Import(stack="bootstrap", stylesheet="FileTree.css")
+@Import(stylesheet="FileTree.css")
 public class FileTree {
     public TreeModel<File> getFileModel() {
         return new TreeModel<File>() {

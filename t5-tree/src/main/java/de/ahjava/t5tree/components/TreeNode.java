@@ -22,7 +22,6 @@ public class TreeNode {
     /**
      * one of the animation parameters for jQuery - e.g. 'slow' and 'fast'
      */
-    @Property
     @Parameter(required=false, defaultPrefix=BindingConstants.LITERAL)
     private String animation;
     
@@ -72,6 +71,10 @@ public class TreeNode {
 
     @Environmental private JavaScriptSupport jsSupport;
 
+    
+    public String getAnimation() {
+        return animation != null ? "'" + animation + "'" : "";
+    }
     
     public String getNodeClass() {
         return nodeClass;

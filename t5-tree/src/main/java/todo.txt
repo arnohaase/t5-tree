@@ -14,4 +14,4 @@ todo
 * 'expanded'/'collapsed' instead of 'opened'/'closed'
 * styling of FileTree
 * push tree elements onto the Environment
-
+* animation with lazy loading
