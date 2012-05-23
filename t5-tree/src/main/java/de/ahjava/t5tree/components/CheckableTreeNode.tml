@@ -8,7 +8,7 @@
         t:id="check" 
         value="checked"
         class="${hierarchyClasses}" 
-        onclick="webbibtree.handleCheckBoxChange(this);${checkboxOnClick};" />
+        onclick="t5tree.handleCheckBoxChange(this);${checkboxOnClick};" />
     </span>
   </t:replace>
       

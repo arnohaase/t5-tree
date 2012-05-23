@@ -1,0 +1,43 @@
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:tr="tapestry-library:t5tree"
+      xmlns:tri="tapestry-library:t5tree/internal"
+      >
+    <header>
+      <h1>Simple explicitly represented tree with check boxes</h1>
+   </header>
+  
+    <p />
+
+    Checked trees require a form
+    
+    <p />
+
+    <t:zone t:id="zone">
+      <t:form zone="zone">
+
+        <div class="well">  
+          <tr:CheckableTreeNode checked="checked1" rowContentText="literal:Parent" isOpen="open1">
+            <tr:CheckableTreeNode checked="checked2" rowContentText="literal:Child 1" isOpen="open2">
+               asdfasdfadsf
+            </tr:CheckableTreeNode>
+            <tr:CheckableTreeNode checked="checked3" rowContentText="literal:Child 2" isOpen="open3">
+              Some more arbitrary content
+            </tr:CheckableTreeNode>
+          </tr:CheckableTreeNode>
+        </div>
+    
+    	<div>
+    	  ${numExpanded} nodes are expanded.
+    	</div>
+    	<div>
+    	  ${numChecked} items are checked.
+    	</div>
+    
+        <div class="form-actions">
+          <t:submit class="btn btn-primary" value="Submit" />
+        </div>
+      </t:form>
+    </t:zone>
+    
+</t:layout>
+

@@ -13,7 +13,7 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import de.ahjava.t5tree.tree.TreeHierarchyTracker;
 
 
-@Import(library="context:js/webbibtree.js")
+@Import(library="style/t5tree.js")
 public class CheckableTreeNode extends TreeNode {
     @InjectComponent private ClientElement check;
     @Environmental private JavaScriptSupport jsSupport;
@@ -57,7 +57,7 @@ public class CheckableTreeNode extends TreeNode {
     @AfterRenderBody
     public void afterRenderBody() {
         TreeHierarchyTracker.pop(); // TODO verify if this is always called
-        jsSupport.addScript("webbibtree.refreshCheckboxFromChildValues($j('#%s').get(0));", check.getClientId());
+        jsSupport.addScript("t5tree.refreshCheckboxFromChildValues($j('#%s').get(0));", check.getClientId());
     }
     
     public String getHierarchyClasses() {
