@@ -1,0 +1,22 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.ahjava</groupId>
+	<artifactId>t5tree-all-modules</artifactId>
+	<properties>
+		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
+	</properties>
+
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>t5tree-all-modules</name>
+	
+	<modules>
+		<module>t5-tree/pom.xml</module> 
+		<module>t5-tree-demo/pom.xml</module> 
+	</modules>
+</project>
+
+

@@ -1,0 +1,22 @@
+<t:container xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+    xmlns:p="tapestry:parameter"
+    xmlns:tr="tapestry-library:t5tree"
+  >
+
+  <div style="background-color: lightblue; margin: 20px;">
+    <t:delegate to="render" /> 
+  </div>
+
+  <t:block t:id="leaf">
+    -- leaf --
+  </t:block>
+
+  <t:block t:id="nodestart">
+    abc
+  </t:block>
+
+  <t:block t:id="nodeend">
+    xyz
+  </t:block>
+</t:container>

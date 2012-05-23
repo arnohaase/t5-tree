@@ -1,0 +1,15 @@
+<t:extend xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"
+      >
+  <t:replace id="before-row-content">
+    <span class="tree-checkbox ${checkboxClass}">
+      <t:checkbox
+        t:id="check" 
+        value="checked"
+        class="${hierarchyClasses}" 
+        onclick="webbibtree.handleCheckBoxChange(this);${checkboxOnClick};" />
+    </span>
+  </t:replace>
+      
+</t:extend>     

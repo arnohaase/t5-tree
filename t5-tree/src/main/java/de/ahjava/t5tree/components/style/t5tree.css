@@ -1,0 +1,43 @@
+.tree-children {
+  margin-left: 24px;
+}
+
+.tree-leaf {
+  margin-left: 28px;
+}
+
+.tree-icon-open {
+  background-image: url('treenode-open.png');
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  text-shadow: none;
+}
+
+.tree-icon-closed {
+  background-image: url('treenode-closed.png');
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  text-shadow: none;
+}
+
+.tree-open-close {
+  margin-right: 10px;
+  height:13px;
+  padding: 0px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tree-checkbox {
+  margin-right: 7px;
+}

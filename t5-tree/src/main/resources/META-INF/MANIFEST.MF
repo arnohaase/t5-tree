@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+tapestry-module-classes: de.ahjava.t5tree.services.T5TreeModule
+

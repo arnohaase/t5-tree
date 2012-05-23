@@ -1,0 +1,80 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.ahjava</groupId>
+	<artifactId>t5tree</artifactId>
+	<properties>
+		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
+	</properties>
+
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>t5tree</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-core</artifactId>
+			<version>5.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry5-annotations</artifactId>
+			<version>5.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-beanvalidator</artifactId>
+			<version>5.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.got5</groupId>
+			<artifactId>tapestry5-jquery</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>devlab722-repo</id>
+			<url>http://nexus.devlab722.net/nexus/content/repositories/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+</project>
+
+

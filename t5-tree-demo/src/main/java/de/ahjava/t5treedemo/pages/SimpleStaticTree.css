@@ -1,0 +1,16 @@
+.icon-space {
+  margin-left: -3px;
+  margin-right:5px;
+}
+
+.tree-children-below-icon {
+  margin-left: 40px;
+}
+
+.tree-children-below-icon-with-line {
+  padding-left: 22px;
+  background-image: url('treenode-vertical.png');
+  background-repeat: repeat-y;
+  background-position: -1px 0px;
+}
+

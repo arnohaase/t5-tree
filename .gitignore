@@ -1,6 +1,8 @@
 .project
 .classpath
 
+target
+
 *.class
 
 *~

@@ -1,0 +1,43 @@
+<t:container xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"
+      xmlns:tr="tapestry-library:t5tree"
+      xmlns:tri="tapestry-library:t5tree/internal"
+    >
+    
+  <div class="tree-folder ${treeOpenClosedClass} ${nodeClass}">
+    <div class="tree-row ${rowClass}">
+      <t:If test="rememberOpenClose">
+        <t:Hidden t:id="hiddenIsOpenField" value="isOpen" />
+      </t:If>
+    
+      <tr:span t:id="treeOpenClose" class="tree-open-close" value="${isOpen}" onclick="
+        var isOpen = ($j(${openCloseSelector}).val() === 'false');
+        $j(${openCloseSelector}).val('' + isOpen);
+        $j(this).parent().siblings().toggle(${animation});
+        $j(this).children().removeClass('${iconOpenClass}');
+        $j(this).children().removeClass('${iconClosedClass}');
+        if(isOpen)
+          $j(this).children().addClass('${iconOpenClass}');
+        else
+          $j(this).children().addClass('${iconClosedClass}');
+        "> 
+        <i class="${iconOpenClosedCommonClass} ${iconOpenClosedClass}"></i>
+      </tr:span>
+      
+      <span class="${treeBeforeContentTextClass}"></span>
+
+      <t:extension-point id="before-row-content">
+      </t:extension-point>
+
+      <t:If test="hasContentComponent">
+        <t:delegate to="rowContentComponent" />
+        <p:else>${rowContentText}</p:else>
+      </t:If>
+    </div>
+    <div class="${treeChildrenClass}" style="display: ${openClosedStyle};">
+      <t:body />
+    </div>
+  </div>
+
+</t:container>

@@ -1,0 +1,79 @@
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:tr="tapestry-library:t5tree"
+      xmlns:tri="tapestry-library:t5tree/internal"
+      >
+ <body>
+  <div class="container">
+    <header>
+      <h1>Simple tree with explicitly represented structure</h1>
+   </header>
+  
+    <p />
+
+    This is an example of a simple tree. It does not require a form and is constructed explicitly in the tml file.
+    
+    <p />
+
+    <div class="well">  
+      <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Parent" isOpen="true">
+        <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Child 1" isOpen="false">
+          Content
+        </tr:TreeNode>
+        <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Child 2" isOpen="true">
+          Some more arbitrary content
+        </tr:TreeNode>
+      </tr:TreeNode>
+    </div>
+    
+    This is the same example but with icons per row
+    
+    <p />
+
+    <div class="well">  
+      <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Parent" treeBeforeContentTextClass="icon-space icon-thumbs-up" treeChildrenClass="tree-children-below-icon" isOpen="true">
+        <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Child 1" treeBeforeContentTextClass="icon-space icon-thumbs-down" treeChildrenClass="tree-children-below-icon" isOpen="false">
+          Content
+        </tr:TreeNode>
+        <tr:TreeNode rememberOpenClose="false" rowContentText="literal:Child 2" treeBeforeContentTextClass="icon-space icon-hand-right" treeChildrenClass="tree-children-below-icon" isOpen="true">
+          Some more arbitrary content
+        </tr:TreeNode>
+      </tr:TreeNode>
+    </div>
+    
+    And now with arbitrary HTML inside the nodes instead of just text as well as customized styling
+    
+    <p />
+
+    <div class="well">  
+      <tr:TreeNode rememberOpenClose="false" iconOpenClass="icon-chevron-down" iconClosedClass="icon-chevron-right" rowContentComponent="parentBlock" treeBeforeContentTextClass="icon-space icon-thumbs-up" treeChildrenClass="tree-children-below-icon-with-line" isOpen="true">
+        <tr:TreeNode rememberOpenClose="false" iconOpenClass="icon-chevron-down" iconClosedClass="icon-chevron-right" rowContentComponent="childBlock1" treeBeforeContentTextClass="icon-space icon-thumbs-down" treeChildrenClass="tree-children-below-icon-with-line" isOpen="true">
+          Content
+        </tr:TreeNode>
+        <tr:TreeNode rememberOpenClose="false" iconOpenClass="icon-chevron-down" iconClosedClass="icon-chevron-right" rowContentText="literal:... and some plain text to illustrate things can be mixed in a tree" treeBeforeContentTextClass="icon-space icon-hand-right" treeChildrenClass="tree-children-below-icon-with-line" isOpen="true">
+          Some more arbitrary content
+        </tr:TreeNode>
+      </tr:TreeNode>
+    </div>
+    
+    <t:block t:id="parentBlock">
+      <table style="display:inline-block;">
+        <tr>
+          <td style="background-color:red">red</td>
+          <td style="background-color:green">green</td>
+        </tr>
+        <tr>
+          <td style="background-color:blue">blue</td>
+          <td style="background-color:brown">brown</td>
+        </tr>
+      </table>
+    </t:block>
+    
+    <t:block t:id="childBlock1">
+      Not submitted because outside a form, but still illustrates what is possible: <input type="text" style="margin:0;padding:0;"></input>
+    </t:block>
+    
+    <tri:rec text="abcd" />
+    
+  </div>
+ </body>
+</html>
