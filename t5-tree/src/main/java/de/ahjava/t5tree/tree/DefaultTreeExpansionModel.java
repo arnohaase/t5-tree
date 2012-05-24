@@ -19,7 +19,7 @@ public class DefaultTreeExpansionModel implements TreeExpansionModel {
         @Override
         public boolean isExpanded(String nodeId) {
             if (!initializedNodes.contains(nodeId)) {
-                setExpanded(nodeId, model.isExpanded(model.fromId(nodeId)));
+                setExpanded(nodeId, model.isInitiallyExpanded(model.fromId(nodeId)));
             }
             return super.isExpanded(nodeId);
         }

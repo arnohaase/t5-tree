@@ -30,6 +30,10 @@ public class TreeHierarchyTracker {
         }
     }
     
+    public static void clear() {
+        parentCheckboxId.remove();
+    }
+    
     public static String getParentCheckboxId() {
         if (parentCheckboxId.get() == null) {
             return null;

@@ -15,7 +15,7 @@
   <t:zone t:id="zone">
     <t:form zone="zone">
       <div class="well">  
-        <tr:tree t:id="tree" model="fileModel" expansionModel="expansionModel" animation="fast" />
+        <tr:tree t:id="tree" model="fileModel" expansionModel="expansionModel" checkModel="checkModel" animation="fast" />
       </div>
 
       <div>

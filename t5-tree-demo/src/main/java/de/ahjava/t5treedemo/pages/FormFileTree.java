@@ -9,7 +9,9 @@ import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Zone;
 
+import de.ahjava.t5tree.tree.DefaultTreeCheckModel;
 import de.ahjava.t5tree.tree.DefaultTreeExpansionModel;
+import de.ahjava.t5tree.tree.TreeCheckModel;
 import de.ahjava.t5tree.tree.TreeExpansionModel;
 import de.ahjava.t5tree.tree.TreeModel;
 
@@ -19,12 +21,17 @@ public class FormFileTree {
     @InjectComponent private Zone zone;
     
     @Property private TreeModel<File> fileModel;
+    
     @SuppressWarnings("unused")
     @Property private TreeExpansionModel expansionModel;
+    
+    @SuppressWarnings("unused")
+    @Property private TreeCheckModel checkModel;
     
     public void onActivate() {
         fileModel = createFileModel();
         expansionModel = DefaultTreeExpansionModel.createFrom(fileModel);
+        checkModel = DefaultTreeCheckModel.createFrom(fileModel);
     }
 
     public Object onSubmit() {
@@ -76,10 +83,15 @@ public class FormFileTree {
             }
 
             @Override
-            public boolean isExpanded(File node) {
+            public boolean isInitiallyExpanded(File node) {
                 return getLevel(node) < 2; // || getLevel(node) % 2 == 1;
             }
 
+            @Override
+            public boolean isInitiallyChecked(File node) {
+                return node.getName().startsWith("."); 
+            }
+            
             @Override
             public boolean isEagerlyTransferred(File node) {
                 return getLevel(node) %2 != 0;

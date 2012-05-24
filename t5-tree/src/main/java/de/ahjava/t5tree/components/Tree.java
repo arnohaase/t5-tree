@@ -1,5 +1,6 @@
 package de.ahjava.t5tree.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,9 @@ import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+import de.ahjava.t5tree.tree.TreeCheckModel;
 import de.ahjava.t5tree.tree.TreeExpansionModel;
+import de.ahjava.t5tree.tree.TreeHierarchyTracker;
 import de.ahjava.t5tree.tree.TreeModel;
 
 
@@ -39,11 +42,22 @@ public class Tree<T> {
      */
     @Parameter private TreeExpansionModel expansionModel;
     
+    /**
+     * The tree component recreates the check model with every submit, so clients need not store it persistently
+     */
+    @Parameter private TreeCheckModel checkModel;
+    
     @Parameter(defaultPrefix=BindingConstants.LITERAL)
     private String animation;
     
     @Parameter (value="true", defaultPrefix=BindingConstants.LITERAL)
     private boolean rememberOpenClosed;
+    
+    @Parameter (value="false", defaultPrefix=BindingConstants.LITERAL)
+    private boolean showCheckedState;
+    
+    @Parameter (value="true", defaultPrefix=BindingConstants.LITERAL)
+    private boolean rememberCheckedState;
     
     @Parameter(                                  defaultPrefix=BindingConstants.LITERAL) private String iconOpenClosedCommonClass;
     @Parameter(value="literal:tree-icon-open",   defaultPrefix=BindingConstants.LITERAL) private String iconOpenClass;
@@ -57,8 +71,7 @@ public class Tree<T> {
     @Parameter (value="block:defaultNodeLabel")
     private RenderCommand nodeLabelRenderer;
 
-    @Parameter
-    private T currentNode;
+    @Parameter private T currentNode;
     private boolean isCurrentNodeLast;
     
     @InjectComponent private Zone lazyLoadZone;
@@ -95,6 +108,24 @@ public class Tree<T> {
         }
     }
     
+    private final RenderCommand POP_FROM_CHECKBOX_HIERARCHY = new RenderCommand() {
+        @Override
+        public void render(MarkupWriter writer, RenderQueue queue) {
+            if (hasCheckboxes()) {
+                TreeHierarchyTracker.pop(); //TODO register with Tapestry's global pre-request cleanup service
+            }
+        }
+    };
+    
+    private final RenderCommand CLEAR_CHECKBOX_HIERARCHY = new RenderCommand() {
+        @Override
+        public void render(MarkupWriter writer, RenderQueue queue) {
+            if (hasCheckboxes()) {
+                TreeHierarchyTracker.clear();
+            }
+        }
+    };
+    
     private RenderCommand cmdToRenderOpen(final String name, final String... attributes) {
         return new RenderCommand() {
             @Override
@@ -127,9 +158,63 @@ public class Tree<T> {
     
     private boolean isExpanded(T node) {
         if (expansionModel == null) {
-            return model.isExpanded(node);
+            return model.isInitiallyExpanded(node);
         }
         return expansionModel.isExpanded(model.getId(node));
+    }
+
+    private boolean hasCheckboxes() {
+        return showCheckedState || checkModel != null;
+    }
+    
+    private RenderCommand cmdToRenderCheckbox(final T node) {
+        return new RenderCommand() {
+            @Override
+            public void render(MarkupWriter writer, RenderQueue queue) {
+                if (! hasCheckboxes()) {
+                    return;
+                }
+                
+                final String checkboxClientId = jss.allocateClientId(resources);
+
+                //TODO submit binding
+                //TODO deal with lazy loading
+                
+                
+//                @AfterRenderBody
+//                public void afterRenderBody() {
+//                    TreeHierarchyTracker.pop(); // TODO verify if this is always called
+//                    jsSupport.addScript("t5tree.refreshCheckboxFromChildValues($j('#%s').get(0));", check.getClientId());
+//                }
+
+                
+                writer.element("span", "class", "tree-checkbox "); //TODO + getCheckboxClass(node));
+                final Element checkElement = writer.element("input", 
+                        "type", "checkbox",
+                        "id", checkboxClientId,
+                        "name", checkboxClientId,
+                        "class", TreeHierarchyTracker.getCheckboxHierarchyCssClasses(),
+                        "onclick", "t5tree.handleCheckBoxChange(this);"); //TODO + getCheckboxOnClick --> or provide hooks for subclassing the tree component?
+                final boolean checked = isChecked(node);
+                if (checked) {
+                    checkElement.attribute("value", "checked");
+                }
+                
+                writer.end(); // input
+                writer.end(); // span
+                
+                TreeHierarchyTracker.push(checkboxClientId);
+            }
+        };
+    }
+    
+    private boolean isChecked(T node) {
+        if (checkModel != null) {
+            return checkModel.isChecked(model.getId(node));
+        }
+        else {
+            return model.isInitiallyChecked(node);
+        }
     }
     
     private RenderCommand cmdToRenderOpenCloseControl(final T node, final boolean forEagerLoad, final boolean isLast, final boolean forceOpen) {
@@ -164,7 +249,19 @@ public class Tree<T> {
                     );
                 }
                 else {
-                    final Link lazyLoadLink = resources.createEventLink("lazyLoadTreeChildren", getLazyZoneId(), model.getId(node), isLast);
+                    boolean first = true;
+                    final StringBuilder checkboxIdHierarchy = new StringBuilder();
+                    for (String checkboxId: TreeHierarchyTracker.getAncesterCheckboxIds()) {
+                        if (first) {
+                            first = false;
+                        }
+                        else {
+                            checkboxIdHierarchy.append(" ");
+                        }
+                        checkboxIdHierarchy.append(checkboxId);
+                    }
+                    
+                    final Link lazyLoadLink = resources.createEventLink("lazyLoadTreeChildren", getLazyZoneId(), model.getId(node), isLast, checkboxIdHierarchy);
                     span.attribute("onclick",
                             "console.log('" + lazyLoadZone.getClientId() + "');" +
                         "var zoneObject=Tapestry.findZoneManagerForZone('" + lazyLoadZone.getClientId() + "');" + 
@@ -200,6 +297,7 @@ public class Tree<T> {
 
                         writer.element("div", "class", "tree-folder " + getTreeOpenClosedClass(node, isLazyLoadUpdate) + " " + emptyForNull(model.getNodeClass(node)));
                         queue.push(RENDER_CLOSE_TAG);
+                        queue.push(POP_FROM_CHECKBOX_HIERARCHY);
 
                         if (areChildrenTransferred) {
                             queue.push(cmdToRenderChildren(node, isLazyLoadUpdate));
@@ -207,6 +305,7 @@ public class Tree<T> {
 
                         queue.push(RENDER_CLOSE_TAG);
                         queue.push(nodeLabelRenderer);
+                        queue.push(cmdToRenderCheckbox(node));
                         queue.push(cmdToRenderOpenCloseControl(node, areChildrenTransferred, isLast, isLazyLoadUpdate));
                         queue.push(cmdToRenderOpen("div", "class", "tree-row " + getNodeRowClass(node)));
                     }
@@ -249,8 +348,27 @@ public class Tree<T> {
         };
     }
     
-    public void onLazyLoadTreeChildren(String zoneId, String parentNodeId, boolean isLast) {
-        ajaxResponseRenderer.addRender(zoneId, cmdToRenderNode(model.fromId(parentNodeId), isLast, false, true));
+    private RenderCommand cmdToRenderLazyLoad (final T node, final boolean isLast, final boolean isInsideLazyLoadZone, final boolean isLazyLoadUpdate, final List<String> checkboxIdHierarchy) {
+        return new RenderCommand() {
+            @Override
+            public void render(MarkupWriter writer, RenderQueue queue) {
+                queue.push(CLEAR_CHECKBOX_HIERARCHY);
+                queue.push(cmdToRenderNode(node, isLast, isInsideLazyLoadZone, isLazyLoadUpdate));
+                queue.push(new RenderCommand() {
+                    @Override
+                    public void render(MarkupWriter writer, RenderQueue queue) {
+                        for (String checkboxId: checkboxIdHierarchy) {
+                            TreeHierarchyTracker.push(checkboxId);
+                        }
+                    }
+                });
+            }
+        };
+    }
+    
+    public void onLazyLoadTreeChildren(String zoneId, String parentNodeId, boolean isLast, String checkboxHierarchy) {
+        ajaxResponseRenderer.addRender(zoneId, cmdToRenderLazyLoad(model.fromId(parentNodeId), isLast, false, true, Arrays.asList(checkboxHierarchy.split(" "))));
+//        ajaxResponseRenderer.addRender(zoneId, cmdToRenderNode(model.fromId(parentNodeId), isLast, false, true));
     }
     
     public String getLazyZoneId() {

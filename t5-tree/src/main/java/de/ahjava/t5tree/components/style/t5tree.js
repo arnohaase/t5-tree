@@ -18,8 +18,14 @@ var t5tree = {
 	}
 	  
 	if ($j('.descendant-of-' + el.id).length === 0) {
+	  console.log('no children for ' + el.id);
       return; // no child checkboxes --> do nothing
 	}
+	
+	console.log('descendants of ' + el.id);
+	console.log('  ' + $j('.descendant-of-' + el.id + ':checked').length);
+	console.log('  ' + $j('.descendant-of-' + el.id + ':not(:checked)').length);
+	console.log('  ' + $j('.descendant-of-' + el.id).length);
 	
     if ($j('.descendant-of-' + el.id + ":checked").length === 0) {
       $j(el).prop('indeterminate', false).attr('checked', false);

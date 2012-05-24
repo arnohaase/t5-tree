@@ -56,8 +56,13 @@ public class FileTree {
             }
 
             @Override
-            public boolean isExpanded(File node) {
+            public boolean isInitiallyExpanded(File node) {
                 return getLevel(node) < 2; // || getLevel(node) % 2 == 1;
+            }
+
+            @Override
+            public boolean isInitiallyChecked(File node) {
+                return false;
             }
 
             @Override
