@@ -8,24 +8,31 @@ import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 public class DefaultTreeExpansionModel implements TreeExpansionModel {
     private final Set<String> expandedNodes = CollectionFactory.newSet();
 
-    public static <T> TreeExpansionModel initFrom(TreeModel<T> model) {
-        final DefaultTreeExpansionModel result = new DefaultTreeExpansionModel();
-        for (T rootNode: model.getRootNodes()) {
-            initRec(model, result, rootNode);
+    private static class LazyInitExpansionModel<T> extends DefaultTreeExpansionModel {
+        private final TreeModel<T> model;
+        private final Set<String> initializedNodes = CollectionFactory.newSet();
+        
+        public LazyInitExpansionModel(TreeModel<T> model) {
+            this.model = model;
         }
-        return result;
+        
+        @Override
+        public boolean isExpanded(String nodeId) {
+            if (!initializedNodes.contains(nodeId)) {
+                setExpanded(nodeId, model.isExpanded(model.fromId(nodeId)));
+            }
+            return super.isExpanded(nodeId);
+        }
+        
+        @Override
+        public void setExpanded(String nodeId, boolean expanded) {
+            initializedNodes.add(nodeId);
+            super.setExpanded(nodeId, expanded);
+        }
     }
     
-    private static <T> void initRec(TreeModel<T> model, DefaultTreeExpansionModel result, T node) {
-        if (model.isLeaf(node)) {
-            return;
-        }
-        result.setExpanded(model.getId(node), model.isExpanded(node));
-        if (model.isEagerlyTransferred(node) || model.isExpanded(node)) {
-            for (T child: model.getChildren(node)) {
-                initRec(model, result, child);
-            }
-        }
+    public static <T> TreeExpansionModel createFrom(TreeModel<T> model) {
+        return new LazyInitExpansionModel<T>(model);
     }
     
     @Override

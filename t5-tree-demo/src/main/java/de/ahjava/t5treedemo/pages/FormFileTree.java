@@ -24,7 +24,7 @@ public class FormFileTree {
     
     public void onActivate() {
         fileModel = createFileModel();
-        expansionModel = DefaultTreeExpansionModel.initFrom(fileModel);
+        expansionModel = DefaultTreeExpansionModel.createFrom(fileModel);
     }
 
     public Object onSubmit() {
