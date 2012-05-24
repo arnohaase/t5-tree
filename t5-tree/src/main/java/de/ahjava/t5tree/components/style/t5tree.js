@@ -16,7 +16,7 @@ var t5tree = {
 	if (! el) {
       return;
 	}
-	  
+	
 	if ($j('.descendant-of-' + el.id).length > 0) {
       if ($j('.descendant-of-' + el.id + ":checked").length === 0) {
         $j(el).prop('indeterminate', false).attr('checked', false);

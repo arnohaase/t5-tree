@@ -297,7 +297,9 @@ public class Tree<T> {
                 
                 if (model.isLeaf(node)) {
                     queue.push(RENDER_CLOSE_TAG);
+                    queue.push(POP_FROM_CHECKBOX_HIERARCHY);
                     queue.push(nodeLabelRenderer); //TODO enhance this - in sync with the (to be done) TreeLeaf component
+                    queue.push(cmdToRenderCheckbox(node));
                     queue.push(cmdToRenderOpen("div", "class", "tree-leaf " + getLeafClass(node)));
                 }
                 else {

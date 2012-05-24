@@ -1,5 +1,6 @@
 package de.ahjava.t5tree.tree;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
@@ -48,5 +49,10 @@ public class DefaultTreeCheckModel implements TreeCheckModel {
         else {
             checkedNodes.remove(nodeId);
         }
+    }
+
+    @Override
+    public Set<String> getAllSelectedIds() {
+        return Collections.unmodifiableSet(checkedNodes);
     }
 }

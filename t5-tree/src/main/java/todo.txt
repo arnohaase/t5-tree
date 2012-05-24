@@ -6,14 +6,13 @@ todo
 * special class for last child element of a node in a tree --> make special rendering possible
 * replace "arbitrary content" with TreeLeaf --> at least indentation
 * 'expanded'/'collapsed' instead of 'opened'/'closed'
-* styling of FileTree
 * push tree elements onto the Environment?
 * looped example for explicit tree - department, section, employee
 * styling: folder without children
-* separate out a TreeStyleModel?
 * Attribute showFlexibleStyling (with default=false) --> reduce HTML by default(?)
 * override checked state of lazily loaded nodes? But how? We really need to know if the parent node's state is indeterminate - unsure if even that helps
+* separate out a TreeStyleModel?
 
 * checked tree
-  * show check box for leaf nodes
-  * keep check state across submits
+  * styling
+  * performSubmit() on check (!)

@@ -1,6 +1,7 @@
 package de.ahjava.t5treedemo.pages;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class FormFileTree {
     @SuppressWarnings("unused")
     @Property private TreeExpansionModel expansionModel;
     
-    @SuppressWarnings("unused")
     @Property private TreeCheckModel checkModel;
     
     public void onActivate() {
@@ -38,6 +38,21 @@ public class FormFileTree {
         return zone;
     }
 
+    public String getNumSelectedFiles() {
+        return NumberFormat.getIntegerInstance().format(checkModel.getAllSelectedIds().size());
+    }
+    
+    public String getTotalSelectedSize() {
+        long result = 0;
+        
+        for (String fileId: checkModel.getAllSelectedIds()) {
+            final File f = fileModel.fromId(fileId);
+            result += f.length();
+        }
+        
+        return NumberFormat.getIntegerInstance().format(result);
+    }
+    
     private static TreeModel<File> createFileModel() {
         return new TreeModel<File>() {
             private final char fileSeparator = System.getProperty("file.separator").charAt(0);

@@ -19,7 +19,7 @@
       </div>
 
       <div>
-    	??? files are selected, having a total size of ??? bytes.
+    	${numSelectedFiles} files are selected, having a total size of ${totalSelectedSize} bytes.
       </div>
     
       <div class="form-actions">
