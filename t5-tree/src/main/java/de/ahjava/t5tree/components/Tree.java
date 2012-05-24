@@ -43,6 +43,14 @@ public class Tree<T> {
     // TODO
 //    @Property
 //    private String mangledOpenNodes;
+
+    @Parameter(                                  defaultPrefix=BindingConstants.LITERAL) private String iconOpenClosedCommonClass;
+    @Parameter(value="literal:tree-icon-open",   defaultPrefix=BindingConstants.LITERAL) private String iconOpenClass;
+    @Parameter(value="literal:tree-icon-closed", defaultPrefix=BindingConstants.LITERAL) private String iconClosedClass;
+    
+    @Parameter(value="literal:tree-children", defaultPrefix=BindingConstants.LITERAL) private String childrenDivClass;
+    @Parameter(                               defaultPrefix=BindingConstants.LITERAL) private String nodeRowClass;
+    @Parameter(                               defaultPrefix=BindingConstants.LITERAL) private String leafClass;
     
     @Property
     @Parameter (value="block:defaultNodeLabel")
@@ -158,7 +166,7 @@ public class Tree<T> {
                         queue.push(RENDER_CLOSE_TAG);
                         queue.push(nodeLabelRenderer);
                         queue.push(cmdToRenderOpenCloseControl(node, areChildrenTransferred, isLast, isLazyLoadUpdate));
-                        queue.push(cmdToRenderOpen("div", "class", "tree-row " + getRowClass(node)));
+                        queue.push(cmdToRenderOpen("div", "class", "tree-row " + getNodeRowClass(node)));
                     }
                 }
             }
@@ -245,17 +253,18 @@ public class Tree<T> {
     }
     
     private String getIconOpenClosedCommonClass(T node) {
-        return ""; //TODO default / tree parameter, delegate to TreeModel
+        final String perNode = model.getIconOpenClosedCommonClass(node);
+        return emptyForNull(perNode != null ? perNode : iconOpenClosedCommonClass);
     }
 
     private String getIconOpenClass(T node) {
-        //TODO default / tree parameter, delegate to TreeModel
-        return "tree-icon-open";
+        final String perNode = model.getIconOpenClass(node);
+        return emptyForNull(perNode != null ? perNode : iconOpenClass);
     }
     
     private String getIconClosedClass(T node) {
-        //TODO default / tree parameter, delegate to TreeModel
-        return "tree-icon-closed";
+        final String perNode = model.getIconClosedClass(node);
+        return emptyForNull(perNode != null ? perNode : iconClosedClass);
     }
     
     private String getIconOpenClosedClass(T node, boolean forceOpen) {
@@ -263,18 +272,18 @@ public class Tree<T> {
     }
     
     private String getChildrenDivClass(T node) { 
-        //TODO default / tree parameter, delegate to TreeModel
-        return "tree-children";
+        final String perNode = model.getChildrenDivClass(node);
+        return emptyForNull(perNode != null ? perNode : childrenDivClass);
     }
     
-    private String getRowClass(T node) {
-        //TODO 
-        return "";
+    private String getNodeRowClass(T node) {
+        final String perNode = model.getNodeRowClass(node);
+        return emptyForNull(perNode != null ? perNode : nodeRowClass);
     }
     
     private String getLeafClass(T node) {
-        //TODO
-        return "";
+        final String perNode = model.getLeafClass(node);
+        return emptyForNull(perNode != null ? perNode : leafClass);
     }
 }
 

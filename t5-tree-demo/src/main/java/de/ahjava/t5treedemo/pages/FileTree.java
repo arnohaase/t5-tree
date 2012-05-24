@@ -69,6 +69,39 @@ public class FileTree {
             public String getNodeClass(File node) {
                 return null;
             }
+
+            @Override
+            public String getIconOpenClosedCommonClass(File node) {
+                return null;
+            }
+
+            @Override
+            public String getIconOpenClass(File node) {
+                return null;
+            }
+
+            @Override
+            public String getIconClosedClass(File node) {
+                return null;
+            }
+
+            @Override
+            public String getChildrenDivClass(File node) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public String getNodeRowClass(File node) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public String getLeafClass(File node) {
+                // TODO Auto-generated method stub
+                return null;
+            }
         };
     }
 }
