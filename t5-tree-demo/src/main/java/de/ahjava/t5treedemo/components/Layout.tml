@@ -12,6 +12,7 @@
             <li><a t:type="pagelink" page="SimpleStaticTree">SimpleStaticTree</a></li>
             <li><a t:type="pagelink" page="CheckedStaticTree">CheckedStaticTree</a></li>
             <li><a t:type="pagelink" page="FileTree">FileTree</a></li>
+            <li><a t:type="pagelink" page="FormFileTree">FormFileTree</a></li>
           </ul>
         </div>
       </div>

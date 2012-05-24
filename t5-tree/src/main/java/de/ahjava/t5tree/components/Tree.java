@@ -7,9 +7,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.ComponentAction;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.MarkupWriter;
+import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -19,30 +21,30 @@ import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.dom.Element;
 import org.apache.tapestry5.runtime.RenderCommand;
 import org.apache.tapestry5.runtime.RenderQueue;
+import org.apache.tapestry5.services.FormSupport;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
+import de.ahjava.t5tree.tree.TreeExpansionModel;
 import de.ahjava.t5tree.tree.TreeModel;
 
 
 @Import(library="style/t5tree.js", stylesheet="style/t5tree.css")
 public class Tree<T> {
-    @Property
-    @Parameter (required=true)
-    private TreeModel<T> model;
-
+    @Parameter (required=true) private TreeModel<T> model;
+    
+    /**
+     * The tree component recreates the expansion model with every submit, so clients need not store it persistently
+     */
+    @Parameter private TreeExpansionModel expansionModel;
+    
     @Parameter(defaultPrefix=BindingConstants.LITERAL)
     private String animation;
     
-    // TODO
-//    @Property
-//    @Parameter (value="false", defaultPrefix=BindingConstants.LITERAL)
-//    private boolean rememberOpenClosed;
+    @Parameter (value="true", defaultPrefix=BindingConstants.LITERAL)
+    private boolean rememberOpenClosed;
     
-    // TODO
-//    @Property
-//    private String mangledOpenNodes;
-
     @Parameter(                                  defaultPrefix=BindingConstants.LITERAL) private String iconOpenClosedCommonClass;
     @Parameter(value="literal:tree-icon-open",   defaultPrefix=BindingConstants.LITERAL) private String iconOpenClass;
     @Parameter(value="literal:tree-icon-closed", defaultPrefix=BindingConstants.LITERAL) private String iconClosedClass;
@@ -63,8 +65,10 @@ public class Tree<T> {
     
     @Inject private AjaxResponseRenderer ajaxResponseRenderer;
     @Inject private ComponentResources resources;
-    @Environmental private JavaScriptSupport jss;
+    @Inject private Request request;
 
+    @Environmental         private JavaScriptSupport jss;
+    @Environmental(false) private FormSupport formSupport;
     
     private Map<String, String> lazyZoneIds = new HashMap<String, String>();
     
@@ -74,6 +78,23 @@ public class Tree<T> {
         }
     };
 
+    private static class ProcessOpenCloseOnSubmit<T> implements ComponentAction<Tree<T>> {
+        private static final long serialVersionUID = 1L;
+        
+        private final String nodeId;
+        private final String hiddenFieldId;
+        
+        public ProcessOpenCloseOnSubmit(String nodeId, String hiddenFieldId) {
+            this.nodeId = nodeId;
+            this.hiddenFieldId = hiddenFieldId;
+        }
+
+        @Override
+        public void execute(Tree<T> component) {
+            component.restoreOpenCloseState(nodeId, hiddenFieldId);
+        }
+    }
+    
     private RenderCommand cmdToRenderOpen(final String name, final String... attributes) {
         return new RenderCommand() {
             @Override
@@ -95,15 +116,39 @@ public class Tree<T> {
         };
     }
     
+    @BeginRender
+    public void beginRender() {
+        if (rememberOpenClosed && formSupport != null) {
+            if (expansionModel == null) {
+                throw new RuntimeException ("An expansion model must be provided for a tree if its state is to be remembered. If that is not desired, set rememberOpenClosed to false.");
+            }
+        }
+    }
+    
+    private boolean isExpanded(T node) {
+        if (expansionModel == null) {
+            return model.isExpanded(node);
+        }
+        return expansionModel.isExpanded(model.getId(node));
+    }
+    
     private RenderCommand cmdToRenderOpenCloseControl(final T node, final boolean forEagerLoad, final boolean isLast, final boolean forceOpen) {
         return new RenderCommand() {
             @Override
             public void render(MarkupWriter writer, RenderQueue queue) {
-                final String openCloseId = jss.allocateClientId(resources); 
+                final String openCloseId = jss.allocateClientId(resources);
+                
+                writer.element("input", "type", "hidden", "id", openCloseId, "name", openCloseId, "value", "" + isOpen(node, forceOpen));
+                writer.end();
+                
+                if(rememberOpenClosed && formSupport != null) {
+                    formSupport.store(Tree.this, new ProcessOpenCloseOnSubmit<T>(model.getId(node), openCloseId));
+                }
+                
                 final Element span = writer.element("span");
-                span.attribute("id", openCloseId);
+//                span.attribute("id", openCloseId);
                 span.addClassName("tree-open-close");
-                span.attribute("value", String.valueOf(model.isExpanded(node)));
+                span.attribute("value", String.valueOf(isExpanded(node)));
                 
                 if (forEagerLoad) {
                     span.attribute("onclick", 
@@ -128,8 +173,6 @@ public class Tree<T> {
                 }
                 queue.push(RENDER_CLOSE_TAG);
                 queue.push(cmdToRenderEmptyElement("i", "class", getIconOpenClosedCommonClass(node) + " " + getIconOpenClosedClass(node, forceOpen)));
-                
-                jss.addScript("$j('#%s').val('%s');", openCloseId, "" + isOpen(node, forceOpen));
             }
         };
     }
@@ -147,13 +190,13 @@ public class Tree<T> {
                     queue.push(cmdToRenderOpen("div", "class", "tree-leaf " + getLeafClass(node)));
                 }
                 else {
-                    final boolean requiresLazyLoadZone = ! model.isEagerlyTransferred(node) && ! model.isExpanded(node) && !isInsideLazyLoadZone && !isLazyLoadUpdate;
+                    final boolean requiresLazyLoadZone = ! model.isEagerlyTransferred(node) && ! isExpanded(node) && !isInsideLazyLoadZone && !isLazyLoadUpdate;
                     
                     if (requiresLazyLoadZone) {
                         queue.push((RenderCommand) lazyLoadZone);
                     }
                     else {
-                        final boolean areChildrenTransferred = model.isEagerlyTransferred(node) || model.isExpanded(node) || isLazyLoadUpdate; 
+                        final boolean areChildrenTransferred = model.isEagerlyTransferred(node) || isExpanded(node) || isLazyLoadUpdate; 
 
                         writer.element("div", "class", "tree-folder " + getTreeOpenClosedClass(node, isLazyLoadUpdate) + " " + emptyForNull(model.getNodeClass(node)));
                         queue.push(RENDER_CLOSE_TAG);
@@ -227,6 +270,11 @@ public class Tree<T> {
         return cmdToRenderNodes(model.getRootNodes());
     }
     
+    public void restoreOpenCloseState(String nodeId, String hiddenFieldId) {
+        final String value = request.getParameter(hiddenFieldId);
+        expansionModel.setExpanded(nodeId, "true".equals(value));
+    }
+    
     public String getCurrentNodeLabel() {
         return model.getLabel(currentNode);
     }
@@ -240,7 +288,7 @@ public class Tree<T> {
     }
     
     public boolean isOpen(T node, boolean forceOpen) {
-        return forceOpen || model.isExpanded(node);
+        return forceOpen || isExpanded(node);
     }
 
     private String getOpenClosedStyle(T node) {

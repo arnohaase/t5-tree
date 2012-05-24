@@ -13,8 +13,12 @@ public interface TreeModel<T> {
 
     boolean isLeaf(T node);
     List<T> getChildren(T node);
-    
+
+    /**
+     * used only for initial update and only if no explicit expansionModel is configured for a tree 
+     */
     boolean isExpanded(T node);
+    
     boolean isEagerlyTransferred(T node);
     
     /**

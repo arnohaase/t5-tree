@@ -1,7 +1,5 @@
 todo
 ----
-* sample for form based and persistent tree
-* TODO comments in TreeNode and CheckableTreeNode
 * direct support for icons
 * listeners on different parts / possibility to inject the different parts of a tree (e.g. for lazy loading of parts of a tree, or open / close by double clicking the title)
 * distinguish between tr:TreeFolder and tr:TreeLeaf
@@ -11,3 +9,5 @@ todo
 * styling of FileTree
 * push tree elements onto the Environment?
 * looped example for explicit tree - department, section, employee
+* styling: folder without children
+

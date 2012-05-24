@@ -1,0 +1,32 @@
+<t:Layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:tr="tapestry-library:t5tree"
+      xmlns:tri="tapestry-library:t5tree/internal"
+      >
+  <header>
+    <h1>A file system tree that lives in a form</h1>
+  </header>
+  
+  <p />
+
+  This file system tree lives in a form, showing expand/collapse behavior that survives submits and tri-state checkboxes.  
+     
+  <p />
+
+  <t:zone t:id="zone">
+    <t:form zone="zone">
+      <div class="well">  
+        <tr:tree t:id="tree" model="fileModel" expansionModel="expansionModel" animation="fast" />
+      </div>
+
+      <div>
+    	??? files are selected, having a total size of ??? bytes.
+      </div>
+    
+      <div class="form-actions">
+        <t:submit class="btn btn-primary" value="Submit" />
+      </div>
+        
+    </t:form>
+  </t:zone>
+</t:Layout>
+  
