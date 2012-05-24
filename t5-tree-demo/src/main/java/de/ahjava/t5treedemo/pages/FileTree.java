@@ -17,7 +17,7 @@ public class FileTree {
 
             @Override
             public List<File> getRootNodes() {
-                return Arrays.asList(new File("."));
+                return Arrays.asList(new File(".."));
             }
 
             @Override
