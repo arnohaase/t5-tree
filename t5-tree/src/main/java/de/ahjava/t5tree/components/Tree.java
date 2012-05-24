@@ -19,7 +19,6 @@ import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.dom.Element;
 import org.apache.tapestry5.runtime.RenderCommand;
 import org.apache.tapestry5.runtime.RenderQueue;
-import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
@@ -62,8 +61,6 @@ public class Tree<T> {
     
     @InjectComponent private Zone lazyLoadZone;
     
-    @Inject private Request request;
-    
     @Inject private AjaxResponseRenderer ajaxResponseRenderer;
     @Inject private ComponentResources resources;
     @Environmental private JavaScriptSupport jss;
@@ -80,6 +77,7 @@ public class Tree<T> {
     private RenderCommand cmdToRenderOpen(final String name, final String... attributes) {
         return new RenderCommand() {
             @Override
+            @SuppressWarnings("all")
             public void render(MarkupWriter writer, RenderQueue queue) {
                 writer.element(name, attributes);
             }
@@ -89,6 +87,7 @@ public class Tree<T> {
     private RenderCommand cmdToRenderEmptyElement(final String name, final String... attributes) {
         return new RenderCommand() {
             @Override
+            @SuppressWarnings("all")
             public void render(MarkupWriter writer, RenderQueue queue) {
                 writer.element(name, attributes);
                 writer.end();
