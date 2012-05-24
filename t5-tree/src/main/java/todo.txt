@@ -16,3 +16,4 @@ todo
 
 * checked tree
   * show check box for leaf nodes
+  * keep check state across submits

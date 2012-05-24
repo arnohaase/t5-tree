@@ -108,6 +108,23 @@ public class Tree<T> {
         }
     }
     
+    private static class ProcessCheckOnSubmit<T> implements ComponentAction<Tree<T>> {
+        private static final long serialVersionUID = 1L;
+    
+        private final String nodeId;
+        private final String checkboxId;
+        
+        public ProcessCheckOnSubmit(String nodeId, String checkboxId) {
+            this.nodeId = nodeId;
+            this.checkboxId = checkboxId;
+        }
+
+        @Override
+        public void execute(Tree<T> component) {
+            component.restoreCheckedState(nodeId, checkboxId);
+        }
+    }
+    
     private final RenderCommand POP_FROM_CHECKBOX_HIERARCHY = new RenderCommand() {
         @Override
         public void render(MarkupWriter writer, RenderQueue queue) {
@@ -177,16 +194,13 @@ public class Tree<T> {
                 
                 final String checkboxClientId = jss.allocateClientId(resources);
 
-                //TODO submit binding
-                //TODO deal with lazy loading
-                
-                
-//                @AfterRenderBody
-//                public void afterRenderBody() {
-//                    TreeHierarchyTracker.pop(); // TODO verify if this is always called
-//                    jsSupport.addScript("t5tree.refreshCheckboxFromChildValues($j('#%s').get(0));", check.getClientId());
-//                }
+                if (checkModel != null && formSupport != null) {
+                    formSupport.store(Tree.this, new ProcessCheckOnSubmit(model.getId(node), checkboxClientId));
+                }
 
+                if(! model.isLeaf(node)) {
+                    jss.addScript("t5tree.refreshCheckboxFromChildValues($j('#%s').get(0));", checkboxClientId);
+                }
                 
                 writer.element("span", "class", "tree-checkbox "); //TODO + getCheckboxClass(node));
                 final Element checkElement = writer.element("input", 
@@ -197,7 +211,7 @@ public class Tree<T> {
                         "onclick", "t5tree.handleCheckBoxChange(this);"); //TODO + getCheckboxOnClick --> or provide hooks for subclassing the tree component?
                 final boolean checked = isChecked(node);
                 if (checked) {
-                    checkElement.attribute("value", "checked");
+                    checkElement.attribute("checked", "checked");
                 }
                 
                 writer.end(); // input
@@ -368,7 +382,6 @@ public class Tree<T> {
     
     public void onLazyLoadTreeChildren(String zoneId, String parentNodeId, boolean isLast, String checkboxHierarchy) {
         ajaxResponseRenderer.addRender(zoneId, cmdToRenderLazyLoad(model.fromId(parentNodeId), isLast, false, true, Arrays.asList(checkboxHierarchy.split(" "))));
-//        ajaxResponseRenderer.addRender(zoneId, cmdToRenderNode(model.fromId(parentNodeId), isLast, false, true));
     }
     
     public String getLazyZoneId() {
@@ -393,6 +406,12 @@ public class Tree<T> {
         expansionModel.setExpanded(nodeId, "true".equals(value));
     }
     
+    public void restoreCheckedState(String nodeId, String checkboxId) {
+        final String value = request.getParameter(checkboxId);
+        System.out.println("restoring " + (value != null) + " from " + checkboxId + " for " + nodeId);
+        checkModel.setChecked(nodeId, value != null);
+    }
+
     public String getCurrentNodeLabel() {
         return model.getLabel(currentNode);
     }

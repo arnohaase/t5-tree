@@ -17,25 +17,17 @@ var t5tree = {
       return;
 	}
 	  
-	if ($j('.descendant-of-' + el.id).length === 0) {
-	  console.log('no children for ' + el.id);
-      return; // no child checkboxes --> do nothing
+	if ($j('.descendant-of-' + el.id).length > 0) {
+      if ($j('.descendant-of-' + el.id + ":checked").length === 0) {
+        $j(el).prop('indeterminate', false).attr('checked', false);
+      }
+      else if ($j('.descendant-of-' + el.id + ":not(:checked)").length === 0) {
+        $j(el).prop('indeterminate', false).attr('checked', true);
+      }
+      else {
+        $j(el).prop('indeterminate', true).attr('checked', true);
+      }
 	}
-	
-	console.log('descendants of ' + el.id);
-	console.log('  ' + $j('.descendant-of-' + el.id + ':checked').length);
-	console.log('  ' + $j('.descendant-of-' + el.id + ':not(:checked)').length);
-	console.log('  ' + $j('.descendant-of-' + el.id).length);
-	
-    if ($j('.descendant-of-' + el.id + ":checked").length === 0) {
-      $j(el).prop('indeterminate', false).attr('checked', false);
-    }
-    else if ($j('.descendant-of-' + el.id + ":not(:checked)").length === 0) {
-      $j(el).prop('indeterminate', false).attr('checked', true);
-    }
-    else {
-      $j(el).prop('indeterminate', true).attr('checked', true);
-    }
 	
 	var parent = t5tree.findParentCheckbox(el);
 	if (parent) {
