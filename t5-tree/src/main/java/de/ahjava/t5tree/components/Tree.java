@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
 import org.apache.tapestry5.MarkupWriter;
@@ -31,6 +32,9 @@ public class Tree<T> {
     @Parameter (required=true)
     private TreeModel<T> model;
 
+    @Parameter(defaultPrefix=BindingConstants.LITERAL)
+    private String animation;
+    
     // TODO
 //    @Property
 //    @Parameter (value="false", defaultPrefix=BindingConstants.LITERAL)
@@ -97,7 +101,7 @@ public class Tree<T> {
                     span.attribute("onclick", 
                         "var isOpen = ($j('#" + openCloseId + "').val() === 'false');" + 
                         "$j('#" + openCloseId + "').val('' + isOpen);" + 
-                        "$j(this).parent().siblings().toggle();" + //TODO animation
+                        "$j(this).parent().siblings().toggle(" + getAnimation() + ");" + 
                         "$j(this).children().removeClass('" + getIconOpenClass(node) + "');" +
                         "$j(this).children().removeClass('" + getIconClosedClass(node) + "');" +
                         "if(isOpen)" +
@@ -163,13 +167,21 @@ public class Tree<T> {
         return cmdToRenderNode(currentNode, false/*TODO*/, true, false);
     }
     
-    private RenderCommand cmdToRenderChildren(final T node, final boolean forceExpand) {
+    private RenderCommand cmdToRenderChildren(final T node, final boolean isLazyLoadUpdate) {
         return new RenderCommand() {
             @Override
             public void render(MarkupWriter writer, RenderQueue queue) {
                 queue.push(RENDER_CLOSE_TAG);
                 queue.push(cmdToRenderNodes(model.getChildren(node)));
-                queue.push(cmdToRenderOpen("div", "style", "display: " + getOpenClosedStyle(node, forceExpand), "class", getChildrenDivClass(node)));
+
+                if (isLazyLoadUpdate) {
+                    final String clientId = jss.allocateClientId(resources);
+                    queue.push(cmdToRenderOpen("div", "id", clientId, "style", "display: " + getOpenClosedStyle(node), "class", getChildrenDivClass(node)));
+                    jss.addScript("$j('#%s').show(%s)", clientId, getAnimation());
+                }
+                else {
+                    queue.push(cmdToRenderOpen("div", "style", "display: " + getOpenClosedStyle(node), "class", getChildrenDivClass(node)));
+                }
             }
         };
     }
@@ -214,12 +226,16 @@ public class Tree<T> {
         return s != null ? s : "";
     }
     
+    private String getAnimation() {
+        return animation != null ? "'" + animation + "'" : "";
+    }
+    
     public boolean isOpen(T node, boolean forceOpen) {
         return forceOpen || model.isExpanded(node);
     }
 
-    private String getOpenClosedStyle(T node, boolean forceOpen) {
-        return isOpen(node, forceOpen) ? "block" : "none";
+    private String getOpenClosedStyle(T node) {
+        return isOpen(node, false) ? "block" : "none";
     }
     
     private String getTreeOpenClosedClass(T node, boolean forceOpen) {

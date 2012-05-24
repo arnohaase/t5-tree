@@ -22,7 +22,7 @@
   <p />
 
   <div class="well">  
-    <tr:tree t:id="tree" model="fileModel" />
+    <tr:tree t:id="tree" model="fileModel" animation="fast" />
   </div>
 </t:Layout>
   
