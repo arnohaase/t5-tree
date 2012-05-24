@@ -3,15 +3,13 @@ todo
 * sample for form based and persistent tree
 * sample with lazy loading, exploring the file system starting at '.'
 * TODO comments in TreeNode and CheckableTreeNode
-* full-blown 'Tree' component (?)
-* recursive data structures
-* Bootstrap menu above samples, Layout component
+* direct support for icons
 * listeners on different parts / possibility to inject the different parts of a tree (e.g. for lazy loading of parts of a tree, or open / close by double clicking the title)
 * distinguish between tr:TreeFolder and tr:TreeLeaf
-* why does autoconnect=true not work for TreeNode -> TreeNodeOpenCloseControl?
 * special class for last child element of a node in a tree --> make special rendering possible
 * replace "arbitrary content" with TreeLeaf --> at least indentation
 * 'expanded'/'collapsed' instead of 'opened'/'closed'
 * styling of FileTree
-* push tree elements onto the Environment
-* animation with lazy loading
+* push tree elements onto the Environment?
+* looped example for explicit tree - department, section, employee
+

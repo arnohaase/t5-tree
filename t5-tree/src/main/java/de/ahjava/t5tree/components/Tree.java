@@ -50,6 +50,7 @@ public class Tree<T> {
 
     @Parameter
     private T currentNode;
+    private boolean isCurrentNodeLast;
     
     @InjectComponent private Zone lazyLoadZone;
     
@@ -131,6 +132,7 @@ public class Tree<T> {
             @Override
             public void render(MarkupWriter writer, RenderQueue queue) {
                 currentNode = node;
+                isCurrentNodeLast = isLast;
                 
                 if (model.isLeaf(node)) {
                     queue.push(RENDER_CLOSE_TAG);
@@ -164,7 +166,7 @@ public class Tree<T> {
     }
     
     public RenderCommand getRenderCurrentNodeForLazyLoad() {
-        return cmdToRenderNode(currentNode, false/*TODO*/, true, false);
+        return cmdToRenderNode(currentNode, isCurrentNodeLast, true, false);
     }
     
     private RenderCommand cmdToRenderChildren(final T node, final boolean isLazyLoadUpdate) {
