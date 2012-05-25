@@ -56,8 +56,8 @@ public class TreeNode {
     @Property @Parameter private Boolean checked;
     @Property @Parameter private RenderCommand checkboxCompartment;
     
-    @Property @Parameter private String iconClass;
-    @Property @Parameter private Asset iconUrl;
+    @Property @Parameter(defaultPrefix=BindingConstants.LITERAL) private String iconClass;
+    @Property @Parameter(defaultPrefix=BindingConstants.ASSET)   private Asset iconUrl;
     
     @Property
     @Parameter(required=false, value="tree-children", defaultPrefix=BindingConstants.LITERAL)

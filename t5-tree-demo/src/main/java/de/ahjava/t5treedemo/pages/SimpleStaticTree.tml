@@ -28,11 +28,11 @@
     <p />
 
     <div class="well">  
-      <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Parent" treeBeforeContentTextClass="icon-space icon-thumbs-up" treeChildrenClass="tree-children-below-icon" isOpen="true">
-        <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Child 1" treeBeforeContentTextClass="icon-space icon-thumbs-down" treeChildrenClass="tree-children-below-icon" isOpen="false">
+      <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Parent" iconClass="icon-space icon-thumbs-up" treeChildrenClass="tree-children-below-icon" isOpen="true">
+        <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Child 1" iconClass="icon-space icon-thumbs-down" treeChildrenClass="tree-children-below-icon" isOpen="false">
           Content
         </tr:TreeNode>
-        <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Child 2" treeBeforeContentTextClass="icon-space icon-hand-right" treeChildrenClass="tree-children-below-icon" isOpen="true">
+        <tr:TreeNode animation="fast" rememberOpenClose="false" rowContentText="literal:Child 2" iconClass="icon-space icon-hand-right" treeChildrenClass="tree-children-below-icon" isOpen="true">
           Some more arbitrary content
         </tr:TreeNode>
       </tr:TreeNode>
