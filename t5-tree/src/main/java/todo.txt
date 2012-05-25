@@ -1,5 +1,10 @@
 todo
 ----
+* icon compartment in TreeNode
+* TreeLeaf (or TreeNode(isLeaf=true))
+* useFlexibleStyling(default=false)
+* sample: department, section, employee (nicely styled) from loops --> search
+
 * direct support for icons
 * listeners on different parts / possibility to inject the different parts of a tree (e.g. for lazy loading of parts of a tree, or open / close by double clicking the title)
 * distinguish between tr:TreeFolder and tr:TreeLeaf
@@ -10,11 +15,13 @@ todo
 * looped example for explicit tree - department, section, employee
 * styling: folder without children
 * Attribute showFlexibleStyling (with default=false) --> reduce HTML by default(?)
-* use parent checked state for checked state of lazily loaded nodes? But how? We really need to know if the parent node's state is indeterminate - unsure if even that helps
 * separate out a TreeStyleModel?
 * provide acccess to the different parts of each tree node --> allow clients to register listeners
-
 
 * checked tree
   * styling
   * performSubmit() on check (!)
+  * load all children when a parent is checked / unchecked? Make a parent check box indeterminate if there are unloaded descendents?
+  * use parent checked state for checked state of lazily loaded nodes? But how? We really need to know if the parent node's state is indeterminate - unsure if even that helps
+  
+  

@@ -91,20 +91,22 @@ public class FileTree {
             }
 
             @Override
+            public String getIconEmptyClass(File node) {
+                return null;
+            }
+            
+            @Override
             public String getChildrenDivClass(File node) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public String getNodeRowClass(File node) {
-                // TODO Auto-generated method stub
                 return null;
             }
 
             @Override
             public String getLeafClass(File node) {
-                // TODO Auto-generated method stub
                 return null;
             }
         };

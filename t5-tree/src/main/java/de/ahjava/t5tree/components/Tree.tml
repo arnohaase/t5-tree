@@ -13,6 +13,16 @@
       ${currentNodeLabel}
     </t:block>
 
+    <t:block t:id="iconByClass">
+      <span class="${iconClass}"></span>
+    </t:block>
+
+    <t:block t:id="iconByUrl">
+      <span class="${iconCompartmentClass}">
+        <img url="${iconUrl}"></img>
+      </span>
+    </t:block>
+
     <t:block t:id="zoneBlock">
       <t:zone t:id="lazyLoadZone" id="${lazyZoneId}" show="show" update="show">
         <t:delegate to="renderCurrentNodeForLazyLoad" />

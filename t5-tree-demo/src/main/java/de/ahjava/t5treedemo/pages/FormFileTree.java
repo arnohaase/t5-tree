@@ -99,7 +99,7 @@ public class FormFileTree {
 
             @Override
             public boolean isInitiallyExpanded(File node) {
-                return getLevel(node) < 2; // || getLevel(node) % 2 == 1;
+                return getLevel(node) < 1; // || getLevel(node) % 2 == 1;
             }
 
             @Override
@@ -122,6 +122,11 @@ public class FormFileTree {
                 return null;
             }
 
+            @Override
+            public String getIconEmptyClass(File node) {
+                return null;
+            }
+            
             @Override
             public String getIconOpenClass(File node) {
                 return null;

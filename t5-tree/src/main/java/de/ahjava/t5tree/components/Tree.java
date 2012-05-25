@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.ComponentAction;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
@@ -30,6 +31,7 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import de.ahjava.t5tree.tree.TreeCheckModel;
 import de.ahjava.t5tree.tree.TreeExpansionModel;
 import de.ahjava.t5tree.tree.TreeHierarchyTracker;
+import de.ahjava.t5tree.tree.TreeIconStyle;
 import de.ahjava.t5tree.tree.TreeModel;
 
 
@@ -62,6 +64,7 @@ public class Tree<T> {
     @Parameter(                                  defaultPrefix=BindingConstants.LITERAL) private String iconOpenClosedCommonClass;
     @Parameter(value="literal:tree-icon-open",   defaultPrefix=BindingConstants.LITERAL) private String iconOpenClass;
     @Parameter(value="literal:tree-icon-closed", defaultPrefix=BindingConstants.LITERAL) private String iconClosedClass;
+    @Parameter(value="literal:tree-icon-empty",  defaultPrefix=BindingConstants.LITERAL) private String iconEmptyClass;
     
     @Parameter(value="literal:tree-children", defaultPrefix=BindingConstants.LITERAL) private String childrenDivClass;
     @Parameter(                               defaultPrefix=BindingConstants.LITERAL) private String nodeRowClass;
@@ -73,7 +76,15 @@ public class Tree<T> {
 
     @Parameter private T currentNode;
     private boolean isCurrentNodeLast;
-    
+
+    /**
+     * explicitly setting the iconCompartment parameter overrides this
+     */
+    @Parameter(value="byCssClass", defaultPrefix=BindingConstants.LITERAL) private TreeIconStyle iconStyle;
+    @Parameter private RenderCommand iconCompartment;
+
+    @Inject          private Block iconByClass;
+    @Inject          private Block iconByUrl;
     @InjectComponent private Zone lazyLoadZone;
     
     @Inject private AjaxResponseRenderer ajaxResponseRenderer;
@@ -84,6 +95,12 @@ public class Tree<T> {
     @Environmental(false) private FormSupport formSupport;
     
     private Map<String, String> lazyZoneIds = new HashMap<String, String>();
+    
+    private static final RenderCommand RENDER_NOTHING = new RenderCommand() {
+        @Override
+        public void render(MarkupWriter writer, RenderQueue queue) {
+        }
+    };
     
     private static final RenderCommand RENDER_CLOSE_TAG = new RenderCommand() {
         public void render(MarkupWriter writer, RenderQueue queue) {
@@ -172,6 +189,17 @@ public class Tree<T> {
             }
         }
     }
+
+    private RenderCommand cmdToRenderIconCompartment() {
+        if (iconCompartment == null) {
+            switch(iconStyle) {
+            case none: iconCompartment=RENDER_NOTHING; break;
+            case byCssClass: iconCompartment=(RenderCommand) iconByClass; break;
+            case byUrl: iconCompartment=(RenderCommand) iconByUrl; break;
+            }
+        }
+        return iconCompartment;
+    }
     
     private boolean isExpanded(T node) {
         if (expansionModel == null) {
@@ -194,7 +222,7 @@ public class Tree<T> {
                 
                 final String checkboxClientId = jss.allocateClientId(resources);
 
-                if (checkModel != null && formSupport != null) {
+                if (rememberCheckedState && checkModel != null && formSupport != null) {
                     formSupport.store(Tree.this, new ProcessCheckOnSubmit(model.getId(node), checkboxClientId));
                 }
 
@@ -245,7 +273,6 @@ public class Tree<T> {
                 }
                 
                 final Element span = writer.element("span");
-//                span.attribute("id", openCloseId);
                 span.addClassName("tree-open-close");
                 span.attribute("value", String.valueOf(isExpanded(node)));
                 
@@ -277,7 +304,6 @@ public class Tree<T> {
                     
                     final Link lazyLoadLink = resources.createEventLink("lazyLoadTreeChildren", getLazyZoneId(), model.getId(node), isLast, checkboxIdHierarchy);
                     span.attribute("onclick",
-                            "console.log('" + lazyLoadZone.getClientId() + "');" +
                         "var zoneObject=Tapestry.findZoneManagerForZone('" + lazyLoadZone.getClientId() + "');" + 
                         "zoneObject.updateFromURL('" + lazyLoadLink + "', {});"
                     );
@@ -299,6 +325,7 @@ public class Tree<T> {
                     queue.push(RENDER_CLOSE_TAG);
                     queue.push(POP_FROM_CHECKBOX_HIERARCHY);
                     queue.push(nodeLabelRenderer); //TODO enhance this - in sync with the (to be done) TreeLeaf component
+                    queue.push(cmdToRenderIconCompartment());
                     queue.push(cmdToRenderCheckbox(node));
                     queue.push(cmdToRenderOpen("div", "class", "tree-leaf " + getLeafClass(node)));
                 }
@@ -321,6 +348,7 @@ public class Tree<T> {
 
                         queue.push(RENDER_CLOSE_TAG);
                         queue.push(nodeLabelRenderer);
+                        queue.push(cmdToRenderIconCompartment());
                         queue.push(cmdToRenderCheckbox(node));
                         queue.push(cmdToRenderOpenCloseControl(node, areChildrenTransferred, isLast, isLazyLoadUpdate));
                         queue.push(cmdToRenderOpen("div", "class", "tree-row " + getNodeRowClass(node)));
@@ -453,8 +481,44 @@ public class Tree<T> {
         return emptyForNull(perNode != null ? perNode : iconClosedClass);
     }
     
-    private String getIconOpenClosedClass(T node, boolean forceOpen) {
+    private String getIconEmptyClass(T node) {
+        System.out.println(_getIconEmptyClass(node));
+        return _getIconEmptyClass(node);
+    }
+    private String _getIconEmptyClass(T node) {
+        final String perNode = model.getIconEmptyClass(node);
+        return emptyForNull(perNode != null ? perNode : iconEmptyClass);
+    }
+    
+    private boolean isEmpty(T node) {
+        return ! model.isLeaf(node) && model.getChildren(node).isEmpty();
+    }
+    
+    private String getIconOpenClosedClass(T node, boolean forceOpen) { 
+        if(isEmpty(node)) {
+            return getIconEmptyClass(node);
+        }
         return isOpen(node, forceOpen) ? getIconOpenClass(node) : getIconClosedClass(node);
+    }
+    
+    public String getIconClass() {
+        if (model.isLeaf(currentNode)) {
+            return "icon-file"; //TODO
+        }
+        else if(model.getChildren(currentNode).isEmpty()) {
+            return "icon-folder-open";
+        }
+        else {
+            return "icon-folder-open";
+        }
+    }
+
+    public String getIconCompartmentClass() {
+        return ""; //TODO
+    }
+    
+    public String getIconUrl() {
+        return ""; //TODO
     }
     
     private String getChildrenDivClass(T node) { 

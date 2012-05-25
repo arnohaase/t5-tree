@@ -44,6 +44,11 @@ public interface TreeModel<T> {
     String getIconClosedClass(T node);
 
     /**
+     * Optional CSS class added to the open/close compartment iff the node is a folder but empty. If non-null, overrides the tree default.
+     */
+    String getIconEmptyClass(T node);
+    
+    /**
      * Optional CSS class for the children div. If non-null, overrides the tree default.
      */
     String getChildrenDivClass(T node);
