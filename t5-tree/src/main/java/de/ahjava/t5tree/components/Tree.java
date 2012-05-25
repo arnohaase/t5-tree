@@ -441,7 +441,6 @@ public class Tree<T> {
     
     public void restoreCheckedState(String nodeId, String checkboxId) {
         final String value = request.getParameter(checkboxId);
-        System.out.println("restoring " + (value != null) + " from " + checkboxId + " for " + nodeId);
         checkModel.setChecked(nodeId, value != null);
     }
 
@@ -485,10 +484,6 @@ public class Tree<T> {
     }
     
     private String getIconEmptyClass(T node) {
-        System.out.println(_getIconEmptyClass(node));
-        return _getIconEmptyClass(node);
-    }
-    private String _getIconEmptyClass(T node) {
         final String perNode = model.getIconEmptyClass(node);
         return emptyForNull(perNode != null ? perNode : iconEmptyClass);
     }
