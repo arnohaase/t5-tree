@@ -2,6 +2,7 @@ package de.ahjava.t5tree.components;
 
 import javax.inject.Inject;
 
+import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.ClientElement;
@@ -17,12 +18,6 @@ import org.apache.tapestry5.runtime.RenderQueue;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
 
-//TODO konfigurierbar, ob nur +/- oder die ganze Titelzeile auf- und zuklappen
-//TODO Animation optimieren: zunächst +/- Icon auf "transition"-Icon setzen, dann Animation, dann auf anderes Icon setzen
-//TODO beautiful default styling
-//TODO build an actual tree component on top of this
-//TODO JS Contribution, die Elemente "children-of-{id}" und "descendents-of-{id}"-Klassen fuer Kinder / Enkel von TreeNodes erzeugt - oder ThreadLocal beim Rendering im Server, der mithaelt?
-//TODO class or optional block as default for before-row-content
 @Import(library="style/t5tree.js", stylesheet="style/t5tree.css")
 public class TreeNode {
     /**
@@ -41,6 +36,7 @@ public class TreeNode {
     @Parameter(required=false, value="false", defaultPrefix=BindingConstants.PROP)
     private boolean isOpen;
 
+    @SuppressWarnings("unused")
     @Property
     @Parameter(required=false, value="literal:", defaultPrefix=BindingConstants.LITERAL)
     private String iconOpenClosedCommonClass;
@@ -57,18 +53,13 @@ public class TreeNode {
     @Parameter(required=false, value="true", defaultPrefix=BindingConstants.LITERAL)
     private boolean rememberOpenClose;
     
-    @Property
-    @Parameter(required=false)
-    private Boolean checked;
+    @Property @Parameter private Boolean checked;
+    @Property @Parameter private RenderCommand checkboxCompartment;
+    
+    @Property @Parameter private String iconClass;
+    @Property @Parameter private Asset iconUrl;
     
     @Property
-    @Parameter
-    private RenderCommand checkboxCompartment;
-    
-    
-    @Parameter(required=false, value="tree-before-text", defaultPrefix=BindingConstants.LITERAL)
-    private String treeBeforeContentTextClass;
-    
     @Parameter(required=false, value="tree-children", defaultPrefix=BindingConstants.LITERAL)
     private String treeChildrenClass;
     
@@ -121,14 +112,6 @@ public class TreeNode {
         return isOpen ? "block" : "none"; // to avoid flicker during rendering - if we first display the children and later hide them, that causes a flicker 
     }
 
-    public String getTreeBeforeContentTextClass() {
-        return treeBeforeContentTextClass;
-    }
-
-    public String getTreeChildrenClass() {
-        return treeChildrenClass;
-    }
-    
     public String getOpenCloseSelector() {
         if (! rememberOpenClose) {
             return "this";
@@ -158,6 +141,14 @@ public class TreeNode {
         else {
             return (RenderCommand) simpleCheckboxComponent; 
         }
+    }
+
+    public boolean getHasIconClass() {
+        return iconClass != null;
+    }
+    
+    public boolean getHasIconUrl() {
+        return iconUrl != null;
     }
     
     @AfterRender

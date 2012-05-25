@@ -2,6 +2,8 @@ package de.ahjava.t5tree.tree;
 
 import java.util.List;
 
+import org.apache.tapestry5.Asset;
+
 
 public interface TreeModel<T> {
     List<T> getRootNodes();
@@ -47,6 +49,12 @@ public interface TreeModel<T> {
      * Optional CSS class added to the open/close compartment iff the node is a folder but empty. If non-null, overrides the tree default.
      */
     String getIconEmptyClass(T node);
+    
+    /**
+     * css class for the compartment rendered around a url-based icon
+     */
+    String getIconCompartmentClass(T node);
+    Asset getIconUrl(T node);
     
     /**
      * Optional CSS class for the children div. If non-null, overrides the tree default.

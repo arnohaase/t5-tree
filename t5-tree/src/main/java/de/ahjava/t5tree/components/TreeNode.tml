@@ -24,9 +24,16 @@
         <i class="${iconOpenClosedCommonClass} ${iconOpenClosedClass}"></i>
       </tr:span>
       
-      <span class="${treeBeforeContentTextClass}"></span>
-
       <t:delegate to="theCheckboxCompartment" />
+
+      <t:If test="hasIconClass">
+        <i class="${iconClass}" />
+        <p:else>
+          <t:If test="hasIconUrl">
+            <img src="${iconUrl}" />
+          </t:If>
+        </p:else>
+      </t:If>
       
       <t:If test="hasContentComponent">
         <t:delegate to="rowContentComponent" />

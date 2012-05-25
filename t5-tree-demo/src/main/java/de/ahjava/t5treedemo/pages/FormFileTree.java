@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
@@ -149,6 +150,18 @@ public class FormFileTree {
 
             @Override
             public String getLeafClass(File node) {
+                return null;
+            }
+
+            @Override
+            public String getIconCompartmentClass(File node) {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public Asset getIconUrl(File node) {
+                // TODO Auto-generated method stub
                 return null;
             }
         };

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.Import;
 
 import de.ahjava.t5tree.tree.TreeModel;
@@ -107,6 +108,16 @@ public class FileTree {
 
             @Override
             public String getLeafClass(File node) {
+                return null;
+            }
+
+            @Override
+            public String getIconCompartmentClass(File node) {
+                return null;
+            }
+
+            @Override
+            public Asset getIconUrl(File node) {
                 return null;
             }
         };

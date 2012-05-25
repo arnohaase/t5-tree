@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.ComponentAction;
@@ -69,6 +70,8 @@ public class Tree<T> {
     @Parameter(value="literal:tree-children", defaultPrefix=BindingConstants.LITERAL) private String childrenDivClass;
     @Parameter(                               defaultPrefix=BindingConstants.LITERAL) private String nodeRowClass;
     @Parameter(                               defaultPrefix=BindingConstants.LITERAL) private String leafClass;
+    
+    @Parameter(value="literal:", defaultPrefix=BindingConstants.LITERAL) private String iconCompartmentClass;
     
     @Property
     @Parameter (value="block:defaultNodeLabel")
@@ -514,11 +517,12 @@ public class Tree<T> {
     }
 
     public String getIconCompartmentClass() {
-        return ""; //TODO
+        final String perNode = model.getIconCompartmentClass(currentNode);
+        return emptyForNull(perNode != null ? perNode : iconCompartmentClass);
     }
     
-    public String getIconUrl() {
-        return ""; //TODO
+    public Asset getIconUrl() {
+        return model.getIconUrl(currentNode);
     }
     
     private String getChildrenDivClass(T node) { 

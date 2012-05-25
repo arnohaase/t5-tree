@@ -1,6 +1,5 @@
 todo
 ----
-* icon compartment in TreeNode
 * TreeLeaf (or TreeNode(isLeaf=true))
 * useFlexibleStyling(default=false)
 * sample: department, section, employee (nicely styled) from loops --> search
@@ -22,4 +21,10 @@ todo
   * load all children when a parent is checked / unchecked? Make a parent check box indeterminate if there are unloaded descendents?
   * use parent checked state for checked state of lazily loaded nodes? But how? We really need to know if the parent node's state is indeterminate - unsure if even that helps
   
+* TreeNode
+//TODO konfigurierbar, ob nur +/- oder die ganze Titelzeile auf- und zuklappen
+//TODO Animation optimieren: zunächst +/- Icon auf "transition"-Icon setzen, dann Animation, dann auf anderes Icon setzen
+//TODO JS Contribution, die Elemente "children-of-{id}" und "descendents-of-{id}"-Klassen fuer Kinder / Enkel von TreeNodes erzeugt - oder ThreadLocal beim Rendering im Server, der mithaelt?
+//TODO class or optional block as default for before-row-content
+
   
