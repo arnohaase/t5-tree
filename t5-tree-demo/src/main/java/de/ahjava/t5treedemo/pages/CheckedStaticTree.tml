@@ -16,14 +16,14 @@
       <t:form zone="zone">
 
         <div class="well">  
-          <tr:CheckableTreeNode checked="checked1" rowContentText="literal:Parent" isOpen="open1">
-            <tr:CheckableTreeNode checked="checked2" rowContentText="literal:Child 1" isOpen="open2">
+          <tr:TreeNode checked="checked1" rowContentText="literal:Parent" isOpen="open1">
+            <tr:TreeNode checked="checked2" rowContentText="literal:Child 1" isOpen="open2">
                asdfasdfadsf
-            </tr:CheckableTreeNode>
-            <tr:CheckableTreeNode checked="checked3" rowContentText="literal:Child 2" isOpen="open3">
+            </tr:TreeNode>
+            <tr:TreeNode checked="checked3" rowContentText="literal:Child 2" isOpen="open3">
               Some more arbitrary content
-            </tr:CheckableTreeNode>
-          </tr:CheckableTreeNode>
+            </tr:TreeNode>
+          </tr:TreeNode>
         </div>
     
     	<div>

@@ -2,7 +2,6 @@
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter"
       xmlns:tr="tapestry-library:t5tree"
-      xmlns:tri="tapestry-library:t5tree/internal"
     >
     
   <div class="tree-folder ${treeOpenClosedClass} ${nodeClass}">
@@ -27,9 +26,8 @@
       
       <span class="${treeBeforeContentTextClass}"></span>
 
-      <t:extension-point id="before-row-content">
-      </t:extension-point>
-
+      <t:delegate to="theCheckboxCompartment" />
+      
       <t:If test="hasContentComponent">
         <t:delegate to="rowContentComponent" />
         <p:else>${rowContentText}</p:else>
@@ -40,4 +38,7 @@
     </div>
   </div>
 
+  <t:block t:id="simpleCheckboxComponent">
+    <tr:TreeCheckbox t:id="defaultCheckbox" checked="checked" />
+  </t:block>
 </t:container>

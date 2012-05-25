@@ -1,13 +1,19 @@
 package de.ahjava.t5tree.components;
 
+import javax.inject.Inject;
+
 import org.apache.tapestry5.BindingConstants;
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.ClientElement;
+import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.annotations.AfterRender;
 import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.runtime.RenderCommand;
+import org.apache.tapestry5.runtime.RenderQueue;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 
 
@@ -51,6 +57,15 @@ public class TreeNode {
     @Parameter(required=false, value="true", defaultPrefix=BindingConstants.LITERAL)
     private boolean rememberOpenClose;
     
+    @Property
+    @Parameter(required=false)
+    private Boolean checked;
+    
+    @Property
+    @Parameter
+    private RenderCommand checkboxCompartment;
+    
+    
     @Parameter(required=false, value="tree-before-text", defaultPrefix=BindingConstants.LITERAL)
     private String treeBeforeContentTextClass;
     
@@ -68,7 +83,9 @@ public class TreeNode {
 
     @InjectComponent private ClientElement hiddenIsOpenField;
     @InjectComponent private ClientElement treeOpenClose;
-
+    @InjectComponent private TreeCheckbox defaultCheckbox;
+    @Inject          private Block simpleCheckboxComponent;
+    
     @Environmental private JavaScriptSupport jsSupport;
 
     
@@ -127,10 +144,35 @@ public class TreeNode {
         return treeOpenClose;
     }
     
+    private boolean hasCheckbox() {
+        return checked != null;
+    }
+    
+    public RenderCommand getTheCheckboxCompartment() {
+        if (!hasCheckbox()) {
+            return RENDER_NOTHING;
+        }
+        if(checkboxCompartment != null) {
+            return checkboxCompartment;
+        }
+        else {
+            return (RenderCommand) simpleCheckboxComponent; 
+        }
+    }
+    
     @AfterRender
     public void afterRender() {
+        if(hasCheckbox()) {
+            defaultCheckbox.cleanupAfterNode();
+        }
         jsSupport.addScript("$j('#%s').val('%s');", treeOpenClose.getClientId(), "" + isOpen);
     }
+    
+    private static final RenderCommand RENDER_NOTHING = new RenderCommand() {
+        @Override
+        public void render(MarkupWriter writer, RenderQueue queue) {
+        }
+    };
 }
 
 
