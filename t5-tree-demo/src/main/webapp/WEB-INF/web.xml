@@ -6,7 +6,7 @@
 
 	<context-param>
 		<param-name>tapestry.app-package</param-name>
-		<param-value>de.ahjava.t5treedemo</param-value>
+		<param-value>de.arnohaase.t5treedemo</param-value>
 	</context-param>
 	
 	<filter>
