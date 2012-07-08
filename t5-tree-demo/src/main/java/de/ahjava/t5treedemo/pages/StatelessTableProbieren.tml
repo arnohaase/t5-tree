@@ -1,0 +1,52 @@
+<t:Layout 
+    xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+    xmlns:tr="tapestry-library:t5tree"
+    xmlns:p="tapestry:parameter"
+    >
+
+  <header>
+    <h1>StatelessTable</h1>
+  </header>
+  
+  <p />
+
+  This page demos the StatelessTable component, a data table that works without requiring session state (hence its name). 
+    
+  <p />
+    
+  It supports sorting and filtering per column, as well as data based on a context (in this example, the combo box at the top). Every action performs a round trip to the server,
+    and if the surrounding form (that is required) supports AJAX submits, there is no reason to store anything in the HTTP session - because all required data is sent with every
+    request. These features work together with paging of data, even together with inline editing of table contents.
+    
+  <p />
+    
+  While this is certainly not the only useful way of working with tables, it is a useful supplement to have around. This page also uses the dirty handling mixins.
+    
+  <p />
+  
+  <p />
+
+  <hr />
+
+  <t:zone t:id="zone" id="zone">
+    <t:form t:id="form" zone="zone">
+      <t:label for="kind" />
+      <t:select t:id="kind" value="personKind" label="Person Kind:" model="personKindModel" blankOption="never" t:mixins="t5tree/CleanDirtyTrack" cleanClass="greenBorder" dirtyClass="redborder" />
+
+      <t:submit value="reset" t:mixins="t5tree/CleanDirtyReset" dirtyClass="redborder" />
+      <t:submit t:mixins="t5tree/CleanDirtyConfirm" dirtyClass="redborder" confirmQuestion="literal:Submit Changes?"/>
+      <hr />
+
+      <tr:StatelessTable t:id="personTable" model="personModel" context="personKind" curRow="curPerson" showTopPaging="true" showBottomPaging="true" pagingAlignment="right" filteredColumns="firstname, lastname" rowValueEncoder="personEncoder" 
+          dirtyClass="redborder" submitConfirmQuestion="literal:subimt changes?" >
+        <p:idCell>
+          <t:pageLink page="persondetails" context="curPerson.id">${curIdColLabel}</t:pageLink>
+        </p:idCell>
+        <p:lastnameCell>
+          <t:textfield value="curPerson.lastname" t:mixins="t5tree/CleanDirtyTrack, t5tree/SuppressEnterKey" dirtyClass="redborder" />
+        </p:lastnameCell>
+      </tr:StatelessTable>
+    </t:form>
+  </t:zone>
+</t:Layout>
+  

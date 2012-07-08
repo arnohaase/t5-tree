@@ -2,6 +2,12 @@
       xmlns:tr="tapestry-library:t5tree"
       xmlns:tri="tapestry-library:t5tree/internal"
       >
+ <head>
+   <style type="text/css">
+     .redborder {border-width:1px; border-color:red;}
+     .greenborder {border-width:1px; border-color:green;}
+   </style>
+ </head>
  <body>
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
@@ -13,6 +19,7 @@
             <li><a t:type="pagelink" page="CheckedStaticTree">CheckedStaticTree</a></li>
             <li><a t:type="pagelink" page="FileTree">FileTree</a></li>
             <li><a t:type="pagelink" page="FormFileTree">FormFileTree</a></li>
+            <li><a t:type="pagelink" page="StatelessTableProbieren">StatelessTable</a></li>
           </ul>
         </div>
       </div>

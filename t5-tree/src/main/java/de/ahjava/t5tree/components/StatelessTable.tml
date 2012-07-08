@@ -1,0 +1,93 @@
+<t:container 
+    xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+    xmlns:tr="tapestry-library:t5tree"
+    xmlns:p="tapestry:parameter"
+    >
+  <t:hidden t:id="sortColumn" value="sortColumn" />
+  <t:hidden t:id="sortAscending" value="sortAscending" />
+  <t:hidden t:id="firstRow" value="indFirstRow" />
+  
+  <t:if test="showTopPaging">
+    <div class="${pagingCssClass}" style="float:${pagingAlignment};margin-bottom:10px;">
+      <t:delegate to="block:defaultPaging" />
+    </div>
+  </t:if>
+
+  <table class="${tableCssClass}">
+    <thead>
+      <t:delegate to="block:headerFooter" />
+    </thead>
+    <tfoot>
+      <t:delegate to="block:headerFooter" />
+    </tfoot>
+    <tbody>
+      <t:if test="columnFiltersEnabled">
+        <t:delegate to="block:filterRow" />
+      </t:if>
+      <t:if test="hasRowValueEncoder">
+        <t:loop source="rows" value="curRow" encoder="rowValueEncoder">
+          <tr>
+            <t:loop source="model.columnIds" value="curColumnId">
+              <td><t:delegate to="curCellRenderer" /></td>
+            </t:loop>
+          </tr>
+        </t:loop>
+        <p:else>
+          <t:loop source="rows" value="curRow" formState="none">
+            <tr>
+              <t:loop source="model.columnIds" value="curColumnId">
+                <td><t:delegate to="curCellRenderer" /></td>
+              </t:loop>
+            </tr>
+          </t:loop>
+        </p:else>
+      </t:if>
+    </tbody>
+  </table>
+  
+  <t:if test="showBottomPaging">
+    <div class="${pagingCssClass}" style="float:${pagingAlignment};">
+      <t:delegate to="pagingBlock" />
+    </div>
+  </t:if>
+  
+  <t:block t:id="filterRow">
+    <tr>
+      <t:loop source="model.columnIds" value="curColumnId">
+        <td>
+          <t:if test="hasFilter">
+            <t:textfield t:id="abc" value="columnFilter" style="width:100%" />
+          </t:if>
+        </td>
+      </t:loop>
+    </tr>
+  </t:block>
+  
+  <t:block t:id="headerFooter">
+    <t:loop source="model.columnIds" value="curColumnId">
+      <th onclick="${jsForColumnSort}">
+        <div style="">
+          ${curColumnLabel}
+          <span class="${columnSortCssClass}" style="float:right" />
+        </div>
+      </th>
+    </t:loop>
+  </t:block>
+  
+  <t:block t:id="defaultCellRenderer">
+    ${curColumnValue}
+  </t:block>
+
+  <t:block t:id="defaultPaging">
+    <t:submit t:id="firstPage" value="&lt;&lt;" class="btn" t:mixins="t5tree/CleanDirtyConfirm" dirtyClass="prop:dirtyClass" confirmQuestion="submitConfirmQuestion" confirmEnabled="hasSubmitConfirm" />
+    <t:submit t:id="prevPage"  value="&lt;"     class="btn" t:mixins="t5tree/CleanDirtyConfirm" dirtyClass="prop:dirtyClass" confirmQuestion="submitConfirmQuestion" confirmEnabled="hasSubmitConfirm" />
+    Items ${indFirstRowOneBased}-${indLastRowOneBased} of ${totalNumRows}
+    <t:if test="columnFiltersEnabled">
+      (unfiltered: ${totalNumRowsUnfiltered})
+    </t:if>
+    <t:submit t:id="nextPage" value=">"  class="btn" t:mixins="t5tree/CleanDirtyConfirm" dirtyClass="prop:dirtyClass" confirmQuestion="submitConfirmQuestion" confirmEnabled="hasSubmitConfirm" />
+    <t:submit t:id="lastPage" value=">>" class="btn" t:mixins="t5tree/CleanDirtyConfirm" dirtyClass="prop:dirtyClass" confirmQuestion="submitConfirmQuestion" confirmEnabled="hasSubmitConfirm" />
+  </t:block>
+</t:container>
+
+

@@ -1,6 +1,5 @@
 <t:Layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:tr="tapestry-library:t5tree"
-      xmlns:tri="tapestry-library:t5tree/internal"
       >
   <header>
     <h1>A tree representation of the local file system</h1>
