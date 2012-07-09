@@ -26,5 +26,3 @@ todo
 //TODO Animation optimieren: zunaechst +/- Icon auf "transition"-Icon setzen, dann Animation, dann auf anderes Icon setzen
 //TODO JS Contribution, die Elemente "children-of-{id}" und "descendents-of-{id}"-Klassen fuer Kinder / Enkel von TreeNodes erzeugt - oder ThreadLocal beim Rendering im Server, der mithaelt?
 //TODO class or optional block as default for before-row-content
-
-  
